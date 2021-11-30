@@ -1,5 +1,5 @@
-# 0)
- ## START 
+# Homework_1 Kizhnyaev Nikita
+## 0)
   1) On 1 vm add net adapter in virtual box with Internal network
   2) Create 2 vm with addapter internal network.
   3) Install centos & run centos
@@ -18,6 +18,7 @@
         BOOTPROTO="static"
         IPADDR="10.31.110.3"
         PREFIX="24"```
-  9) ```ping 10.31.110.2```
-  10) ```ssh nik@10.31.110.2```
- ## DONE
+  9)sudo ifdown enp0s8 && sudo ifup enp0s8      
+  10) ```ping 10.31.110.2```
+  11) ```ssh nik@10.31.110.2```
+##) 1
