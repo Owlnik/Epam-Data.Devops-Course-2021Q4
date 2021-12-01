@@ -18,7 +18,7 @@
         BOOTPROTO="static"
         IPADDR="10.31.110.3"
         PREFIX="24"```
-  9)sudo ifdown enp0s8 && sudo ifup enp0s8      
+  9) ```sudo ifdown enp0s8 && sudo ifup enp0s8```
   10) ```ping 10.31.110.2```
   11) ```ssh nik@10.31.110.2```
 ##) 1
