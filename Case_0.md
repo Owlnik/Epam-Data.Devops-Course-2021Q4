@@ -21,4 +21,6 @@
   9) ```sudo ifdown enp0s8 && sudo ifup enp0s8```
   10) ```ping 10.31.110.2```
   11) ```ssh nik@10.31.110.2```
-##) 1
+## 1) 
+  1) ```ls /usr/share/man/man{1..9}/*{.,-,_}config{.,-,_}*``` or ```ls /usr/share/man/man{1..9}/*{.,-,_}config{.,-,_}```
+  2) ```ls /usr/share/man/man{1,7}/*system*``` or ```ls /usr/share/man/man{1,7}/*{.,-,_}system{.,-,_}```
