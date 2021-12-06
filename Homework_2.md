@@ -12,15 +12,15 @@
      fi
      ```
       Если файл уже существует, выдаётся одна ошибка, а если нет прав для его создания - другая.
-   2)```
-     #!/bin/bash
-     if [ -e ../task2.txt]
-     echo "File exist" && exit
-     fi 
-     touch ../task2.txt 2>~/err.log
-     if [$? = 1] then 
-     echo "Permission denied"
-     fi
-     ```
+   2) ```
+      #!/bin/bash
+      if [ -e ../task2.txt]
+      echo "File exist" && exit
+      fi 
+      touch ../task2.txt 2>~/err.log
+      if [$? = 1] then 
+      echo "Permission denied"
+      fi
+      ```
      
 
