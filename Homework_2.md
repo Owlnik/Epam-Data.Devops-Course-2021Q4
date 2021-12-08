@@ -36,6 +36,7 @@
      done < $input
      ```
    2) Скрипт выводит отдельно количество файлов и количество директорий.
+  
      ```
      #!/bin/bash
      input="file1"
@@ -47,4 +48,16 @@
      ls -laA $path  | wc -l - num_direct
      done < $input
      ```
+  3) Скрипт принимает любое количество записей в первом файле и обрабатывает их последовательно.
 
+   ```
+     #!/bin/bash
+     input="file1.txt"
+     while read -r path
+     do
+     echo directoryes
+     ls -laAd $path | wc -l
+     num_direct = ls -laAd $path | wc -l
+     ls -laA $path  | wc -l - $num_direct
+     done < $input
+     ```
