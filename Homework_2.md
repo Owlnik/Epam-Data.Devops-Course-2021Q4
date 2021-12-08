@@ -29,12 +29,22 @@
      
      ```
      #!/bin/bash
-     input="file"
-     while read -r line
+     input="file1"
+     while read -r path
      do
-     ls $line
+     ls $path
      done < $input
      ```
-   2)
-     
+   2) Скрипт выводит отдельно количество файлов и количество директорий.
+     ```
+     #!/bin/bash
+     input="file1"
+     while read -r path
+     do
+     echo directoryes
+     ls -laAd $path | wc -l
+     num_direct = ls -laAd $path | wc -l
+     ls -laA $path  | wc -l - num_direct
+     done < $input
+     ```
 
