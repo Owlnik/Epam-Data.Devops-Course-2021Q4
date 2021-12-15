@@ -1,5 +1,5 @@
 # Homework_4 by Kizhnyaev Nikita
-## task 1
+## Task 1
 1) Создайте группу sales с GID 4000 и пользователей bob, alice, 
 eve c основной группой sales. 
 Измените пользователям пароли.
@@ -21,3 +21,19 @@ eve c основной группой sales.
 9) ```chage -M 15 -d 0 bob```
 10) ```chage -M 30 -d 0 alice```
 11) ```chage -M 30  -d 0 eve```
+## Task 2
+1) Создайте трёх пользователей glen, antony, lesly.
+У вас должна быть директория /home/students, где эти три 
+пользователя могут работать совместно с файлами.
+Должен быть возможен только пользовательский и групповой 
+доступ, создание и удаление файлов в /home/students. 
+Файлы, созданные в этой директории, должны автоматически 
+присваиваться группе студентов students.
+2) ``` groupadd --gid students ```
+3) ```useradd -m -g students glen ```
+4) ```useradd -m -g students antony```
+5) ```useradd -m -g students lesly```
+5) ```mkdir /home/students```
+6) ```chgrp students /home/students```
+7) ```chmod 2775 /home/students```
+## Task 3
