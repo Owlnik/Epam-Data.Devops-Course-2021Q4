@@ -113,4 +113,12 @@ Imagine your localhost has been relocated to Havana. Change the time zone on the
 ```sudo timedatectl set-timezone America/Havana```
 ```timedatectl status```
 ## 2.2)
-
+ Find all systemd journal messages on localhost, that were recorded in the last 50 minutes and originate from a system service started with user id 81
+ ```journalctl --since "2021-12-23 17:09:08" _PID=81```
+ ```
+    -- Logs begin at Mon 2021-11-22 10:23:41 GMT, end at Thu 2021-12-23 18:01:01 GMT. --
+    -- No entries --
+ ```
+ ## 2.3)
+Configure  rsyslogd  by adding  a  rule  to  the  newly created  configuration   file /etc/rsyslog.d/auth-errors.conf to log all security and authentication messages with the priority alert and higher to the  /var/log/auth-errors file. Test the newly added log directive with the logger command 
+ 
