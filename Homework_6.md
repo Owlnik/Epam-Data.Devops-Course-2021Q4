@@ -74,3 +74,14 @@ SSH to remotehost without password. Log out from remotehost.
   logout
   Connection to 18.221.144.175 closed.
 ```
+## 1.5)
+Create SSH config file, so that you can SSH to remotehost simply running `ssh remotehost` command. As a result, provide output of command `cat ~/.ssh/config`
+``` vim ~/.ssh/config ```
+``` 
+  Host 18.221.144.175 
+    PreferredAuthentications publickey
+    IdentityFile /home/nik/.ssh/hw-5
+    User Nikita_Kizhniaev
+```
+## 1.6)
+Using command line utility (curl or telnet) verify that there are some webserver running on port 80 of webserver.  Notice that webserver has a private network IP, so you can access it only from the same network (when you are on remotehost that runs in the same private network). Log out from remotehost.
