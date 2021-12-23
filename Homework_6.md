@@ -5,7 +5,7 @@ SSH to remotehost using username and password provided to you in Slack. Logout f
     ```
        Nikita_Kizhniaev@18.221.144.175's password: 
     ```
-    ``` iequeeS9cai8```
+    ``` ****```
     ```
       
        __|  __|_  )
