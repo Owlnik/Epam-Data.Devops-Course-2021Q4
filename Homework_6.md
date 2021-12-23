@@ -85,3 +85,16 @@ Create SSH config file, so that you can SSH to remotehost simply running `ssh re
 ```
 ## 1.6)
 Using command line utility (curl or telnet) verify that there are some webserver running on port 80 of webserver.  Notice that webserver has a private network IP, so you can access it only from the same network (when you are on remotehost that runs in the same private network). Log out from remotehost.
+``` curl 172.31.45.237:80```
+```
+ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"><html><head>
+ ...
+```
+## 1.7)
+Using SSH setup port forwarding, so that you can reach  webserver from your localhost (choose any free local port you like).
+``` ssh -L 8080:172.31.45.237:80 18.221.144.175 &```
+``` curl 127.1:8080 ```
+```
+  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"><html><head>
+  ...
+```
