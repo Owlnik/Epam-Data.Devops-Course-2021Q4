@@ -107,3 +107,10 @@ Like in 1.6, but on localhost using command line utility verify that localhost a
   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"><html><head>
   ...
 ```
+## 2.1)
+Imagine your localhost has been relocated to Havana. Change the time zone on the localhost to Havana and verify the time zone has been changed properly (may be multiple commands)
+
+```sudo timedatectl set-timezone America/Havana```
+```timedatectl status```
+## 2.2)
+
