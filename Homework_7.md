@@ -337,7 +337,7 @@ yum repolist enabled nginx
     gpgkey=https://nginx.org/keys/nginx_signing.key
     module_hotfixes=true
 ```
-5)
+5) Remove sysstat package installed in the first task.
 ```
     sudo yum erase sysstat -y
     Dependencies resolved.
@@ -368,4 +368,127 @@ yum repolist enabled nginx
 
     Complete!
 ```
-6) 
+6) Install EPEL repository and get information about it.
+```
+    sudo yum install epel-release
+    Loaded plugins: fastestmirror
+    Loading mirror speeds from cached hostfile
+     * base: mirrors.datahouse.ru
+     * extras: mirror.axelname.ru
+     * updates: mirror.axelname.ru
+    Resolving Dependencies
+    --> Running transaction check
+    ---> Package epel-release.noarch 0:7-11 will be installed
+    --> Finished Dependency Resolution
+
+    Dependencies Resolved
+
+    ===================================================================================================================================================================================================================
+     Package                                                 Arch                                              Version                                         Repository                                         Size
+    ===================================================================================================================================================================================================================
+    Installing:
+     epel-release                                            noarch                                            7-11                                            extras                                             15 k
+
+    Transaction Summary
+    ===================================================================================================================================================================================================================
+    Install  1 Package
+
+    Total download size: 15 k
+    Installed size: 24 k
+    Is this ok [y/d/N]: y
+    Downloading packages:
+    epel-release-7-11.noarch.rpm                                                                                                                                                                |  15 kB  00:00:01     
+    Running transaction check
+    Running transaction test
+    Transaction test succeeded
+    Running transaction
+      Installing : epel-release-7-11.noarch                                                                                                                                                                        1/1 
+      Verifying  : epel-release-7-11.noarch                                                                                                                                                                        1/1 
+
+    Installed:
+      epel-release.noarch 0:7-11                                                                                                                                                                                       
+
+    Complete!
+```
+```
+sudo yum repoinfo epel
+Loaded plugins: fastestmirror
+Loading mirror speeds from cached hostfile
+ * base: mirrors.datahouse.ru
+ * epel: mirror.nsc.liu.se
+ * extras: mirror.surf
+ * updates: mirror.axelname.ru
+Repo-id      : epel/x86_64
+Repo-name    : Extra Packages for Enterprise Linux 7 - x86_64
+Repo-status  : enabled
+Repo-revision: 1640393346
+Repo-pkgs    : 13 703
+Repo-size    : 16 G
+Repo-metalink: https://mirrors.fedoraproject.org/metalink?repo=epel-7&arch=x86_64
+Repo-baseurl : http://mirror.nsc.liu.se/fedora-epel/7/x86_64/ (84 more)
+Repo-expire  : 21 600 second(s) 
+  Filter     : read-only:present
+Repo-filename: /etc/yum.repos.d/epel.repo
+```
+7) Find how much packages provided exactly by EPEL repository.
+```
+Loading "fastestmirror" plugin
+Config time: 0.008
+Yum version: 3.4.3
+Loading mirror speeds from cached hostfile
+ * base: mirrors.datahouse.ru
+ * epel: ftp.lysator.liu.se
+ * extras: mirror.surf
+ * updates: mirror.axelname.ru
+Setting up Package Sacks
+pkgsack time: 0.012
+Repo-id      : epel/x86_64
+Repo-name    : Extra Packages for Enterprise Linux 7 - x86_64
+Repo-status  : enabled
+Repo-revision: 1640393346
+Repo-pkgs    : 13 703
+Repo-size    : 16 G
+Repo-metalink: https://mirrors.fedoraproject.org/metalink?repo=epel-7&arch=x86_64
+Repo-baseurl : https://ftp.lysator.liu.se/pub/epel/7/x86_64/ (84 more)
+Repo-expire  : 21 600 second(s) 
+  Filter     : read-only:present
+Repo-filename: /etc/yum.repos.d/epel.repo
+
+repolist: 13 703
+```
+8) Install ncdu package from EPEL repo.
+```
+    sudo yum install ncdu -y
+    Last metadata expiration check: 3:41:43 ago on Sat 25 Dec 2021 03:57:13 PM GMT.
+    Dependencies resolved.
+    ===================================================================================================================================================================================
+     Package                              Architecture                           Version                                      Repository                                          Size
+    ===================================================================================================================================================================================
+    Installing:
+     ncdu                                 x86_64                                 1.16-1.el8                                   ol8_developer_EPEL                                  60 k
+
+    Transaction Summary
+    ===================================================================================================================================================================================
+    Install  1 Package
+
+    Total download size: 60 k
+    Installed size: 98 k
+    Downloading Packages:
+    ncdu-1.16-1.el8.x86_64.rpm                                                                                                                         583 kB/s |  60 kB     00:00    
+    -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    Total                                                                                                                                              559 kB/s |  60 kB     00:00     
+    Running transaction check
+    Transaction check succeeded.
+    Running transaction test
+    Transaction test succeeded.
+    Running transaction
+      Preparing        :                                                                                                                                                           1/1 
+      Installing       : ncdu-1.16-1.el8.x86_64                                                                                                                                    1/1 
+      Running scriptlet: ncdu-1.16-1.el8.x86_64                                                                                                                                    1/1 
+      Verifying        : ncdu-1.16-1.el8.x86_64                                                                                                                                    1/1 
+
+    Installed:
+      ncdu-1.16-1.el8.x86_64                                                                                                                                                           
+
+    Complete!
+```
