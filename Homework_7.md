@@ -164,3 +164,208 @@
   /usr/share/man/man8/sadc.8.gz
   /var/log/sa
 ```
+## 2
+
+1) Check if NGINX repository enabled or not.
+```
+
+    sudo yum install yum-utils
+    [sudo] password for nik: 
+    Last metadata expiration check: 3:13:19 ago on Sat 25 Dec 2021 03:57:13 PM GMT.
+    Package yum-utils-4.0.18-4.el8.noarch is already installed.
+    Dependencies resolved.
+    ===================================================================================================================================================================================
+     Package                                            Architecture                     Version                                     Repository                                   Size
+    ===================================================================================================================================================================================
+    Upgrading:
+     dnf-plugins-core                                   noarch                           4.0.21-3.0.1.el8                            ol8_baseos_latest                            70 k
+     python3-dnf-plugins-core                           noarch                           4.0.21-3.0.1.el8                            ol8_baseos_latest                           234 k
+     yum-utils                                          noarch                           4.0.21-3.0.1.el8                            ol8_baseos_latest                            72 k
+
+    Transaction Summary
+    ===================================================================================================================================================================================
+    Upgrade  3 Packages
+
+    Total download size: 377 k
+    Is this ok [y/N]: y
+    Downloading Packages:
+    (1/3): yum-utils-4.0.21-3.0.1.el8.noarch.rpm                                                                                                       499 kB/s |  72 kB     00:00    
+    (2/3): dnf-plugins-core-4.0.21-3.0.1.el8.noarch.rpm                                                                                                455 kB/s |  70 kB     00:00    
+    (3/3): python3-dnf-plugins-core-4.0.21-3.0.1.el8.noarch.rpm                                                                                        1.2 MB/s | 234 kB     00:00    
+    -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    Total                                                                                                                                              1.8 MB/s | 377 kB     00:00     
+    Running transaction check
+    Transaction check succeeded.
+    Running transaction test
+    Transaction test succeeded.
+    Running transaction
+      Preparing        :                                                                                                                                                           1/1 
+      Upgrading        : python3-dnf-plugins-core-4.0.21-3.0.1.el8.noarch                                                                                                          1/6 
+      Upgrading        : dnf-plugins-core-4.0.21-3.0.1.el8.noarch                                                                                                                  2/6 
+      Upgrading        : yum-utils-4.0.21-3.0.1.el8.noarch                                                                                                                         3/6 
+      Cleanup          : yum-utils-4.0.18-4.el8.noarch                                                                                                                             4/6 
+      Cleanup          : dnf-plugins-core-4.0.18-4.el8.noarch                                                                                                                      5/6 
+      Cleanup          : python3-dnf-plugins-core-4.0.18-4.el8.noarch                                                                                                              6/6 
+      Running scriptlet: python3-dnf-plugins-core-4.0.18-4.el8.noarch                                                                                                              6/6 
+      Verifying        : dnf-plugins-core-4.0.21-3.0.1.el8.noarch                                                                                                                  1/6 
+      Verifying        : dnf-plugins-core-4.0.18-4.el8.noarch                                                                                                                      2/6 
+      Verifying        : python3-dnf-plugins-core-4.0.21-3.0.1.el8.noarch                                                                                                          3/6 
+      Verifying        : python3-dnf-plugins-core-4.0.18-4.el8.noarch                                                                                                              4/6 
+      Verifying        : yum-utils-4.0.21-3.0.1.el8.noarch                                                                                                                         5/6 
+      Verifying        : yum-utils-4.0.18-4.el8.noarch                                                                                                                             6/6 
+
+    Upgraded:
+      dnf-plugins-core-4.0.21-3.0.1.el8.noarch                   python3-dnf-plugins-core-4.0.21-3.0.1.el8.noarch                   yum-utils-4.0.21-3.0.1.el8.noarch                  
+
+    Complete!
+```
+```
+    sudo vim /etc/yum.repos.d/nginx.repo
+    [nginx-stable]
+    name=nginx stable repo
+    baseurl=http://nginx.org/packages/centos/$releasever/$basearch/
+    gpgcheck=1
+    enabled=1
+    gpgkey=https://nginx.org/keys/nginx_signing.key
+    module_hotfixes=true
+```
+```
+yum repolist enabled nginx
+```
+2) Install NGINX.
+
+```
+    sudo yum install nginx
+    nginx stable repo                                                                                                                                   89 kB/s |  35 kB     00:00    
+    Dependencies resolved.
+    ===================================================================================================================================================================================
+     Package                              Architecture                          Version                                              Repository                                   Size
+    ===================================================================================================================================================================================
+    Installing:
+     nginx                                x86_64                                1:1.20.2-1.el8.ngx                                   nginx-stable                                820 k
+
+    Transaction Summary
+    ===================================================================================================================================================================================
+    Install  1 Package
+
+    Total download size: 820 k
+    Installed size: 2.8 M
+    Is this ok [y/N]: y
+    Downloading Packages:
+    nginx-1.20.2-1.el8.ngx.x86_64.rpm                                                                                                                  2.7 MB/s | 820 kB     00:00    
+    -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    Total                                                                                                                                              2.6 MB/s | 820 kB     00:00     
+    warning: /var/cache/dnf/nginx-stable-614ef03fac352fea/packages/nginx-1.20.2-1.el8.ngx.x86_64.rpm: Header V4 RSA/SHA1 Signature, key ID 7bd9bf62: NOKEY
+    nginx stable repo                                                                                                                                  8.7 kB/s | 1.5 kB     00:00    
+    Importing GPG key 0x7BD9BF62:
+     Userid     : "nginx signing key <signing-key@nginx.com>"
+     Fingerprint: 573B FD6B 3D8F BC64 1079 A6AB ABF5 BD82 7BD9 BF62
+     From       : https://nginx.org/keys/nginx_signing.key
+    Is this ok [y/N]: y
+    Key imported successfully
+    Running transaction check
+    Transaction check succeeded.
+    Running transaction test
+    Transaction test succeeded.
+    Running transaction
+      Preparing        :                                                                                                                                                           1/1 
+      Running scriptlet: nginx-1:1.20.2-1.el8.ngx.x86_64                                                                                                                           1/1 
+      Installing       : nginx-1:1.20.2-1.el8.ngx.x86_64                                                                                                                           1/1 
+      Running scriptlet: nginx-1:1.20.2-1.el8.ngx.x86_64                                                                                                                           1/1 
+    ----------------------------------------------------------------------
+
+    Thanks for using nginx!
+
+    Please find the official documentation for nginx here:
+    * https://nginx.org/en/docs/
+
+    Please subscribe to nginx-announce mailing list to get
+    the most important news about nginx:
+    * https://nginx.org/en/support.html
+
+    Commercial subscriptions for nginx are available on:
+    * https://nginx.com/products/
+
+    ----------------------------------------------------------------------
+
+      Verifying        : nginx-1:1.20.2-1.el8.ngx.x86_64                                                                                                                           1/1 
+
+    Installed:
+      nginx-1:1.20.2-1.el8.ngx.x86_64                                                                                                                                                  
+
+    Complete!
+```
+3) Check yum history and undo NGINX installation.
+```
+    sudo yum history
+    ID     | Command line                                                                                                                 | Date and time    | Action(s)      | Altered
+    -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        23 | install nginx                                                                                                                | 2021-12-25 19:18 | Install        |    1 EE
+        22 | install yum-utils                                                                                                            | 2021-12-25 19:10 | Upgrade        |    3  <
+        21 | install tcpdump                                                                                                              | 2021-10-21 14:40 | Install        |    1 > 
+        20 | install bind-utils                                                                                                           | 2021-10-19 15:10 | Install        |    8   
+        19 | -y install telnet                                                                                                            | 2021-10-05 13:43 | Install        |    1   
+        18 | install nmap                                                                                                                 | 2021-10-05 13:35 | Install        |    2   
+        17 | upgrade                                                                                                                      | 2021-07-21 12:59 | Upgrade        |    1   
+        16 | install xclip                                                                                                                | 2021-07-20 09:35 | Install        |    6   
+        15 | install ansible                                                                                                              | 2021-07-16 14:58 | Install        |   16   
+        14 | install oracle-epel-release-el8.x86_64                                                                                       | 2021-07-16 14:58 | Install        |    1   
+        13 | install vim                                                                                                                  | 2021-07-14 08:13 | Install        |    4   
+        12 | install git-all                                                                                                              | 2021-07-14 08:09 | Install        |   58   
+        11 | install docker-ce docker-ce-cli containerd.io                                                                                | 2021-07-13 08:51 | Install        |   18   
+        10 | install yum-utils                                                                                                            | 2021-07-13 08:46 | Install        |    1   
+         9 | update                                                                                                                       | 2021-07-13 08:36 | E, I, U        |   71   
+         8 | update                                                                                                                       | 2021-06-28 09:28 | E, I, O, U     |  264 EE
+         7 | update                                                                                                                       | 2021-05-06 09:28 | I, U           |   60 EE
+         6 | install rsyslog                                                                                                              | 2021-03-19 10:46 | Install        |    3   
+         5 | update                                                                                                                       | 2021-03-19 10:33 | I, U           |  101 EE
+         4 | install perl                                                                                                                 | 2021-01-19 12:30 | Install        |  152   
+         3 | update                                                                                                                       | 2021-01-19 12:17 | Upgrade        |    5   
+         2 | install open-vm-tools                                                                                                        | 2021-01-19 12:17 | Install        |   10   
+         1 |                                                                                                                              | 2021-01-19 10:26 | Install        |  436 EE
+
+```
+4) Disable NGINX repository
+```
+    sudo yum-config-manager --disable nginx-stable
+    [nik@dev-Kizhnyaev homework]$ cat /etc/yum.repos.d/nginx.repo
+    [nginx-stable]
+    name=nginx stable repo
+    baseurl=http://nginx.org/packages/centos/$releasever/$basearch/
+    gpgcheck=1
+    enabled=0
+    gpgkey=https://nginx.org/keys/nginx_signing.key
+    module_hotfixes=true
+```
+5)
+```
+    sudo yum erase sysstat -y
+    Dependencies resolved.
+    ===================================================================================================================================================================================
+     Package                                  Architecture                            Version                                           Repository                                Size
+    ===================================================================================================================================================================================
+    Removing:
+     sysstat                                  x86_64                                  11.7.3-6.0.1.el8                                  @System                                  1.4 M
+
+    Transaction Summary
+    ===================================================================================================================================================================================
+    Remove  1 Package
+
+    Freed space: 1.4 M
+    Running transaction check
+    Transaction check succeeded.
+    Running transaction test
+    Transaction test succeeded.
+    Running transaction
+      Preparing        :                                                                                                                                                           1/1 
+      Running scriptlet: sysstat-11.7.3-6.0.1.el8.x86_64                                                                                                                           1/1 
+      Erasing          : sysstat-11.7.3-6.0.1.el8.x86_64                                                                                                                           1/1 
+      Running scriptlet: sysstat-11.7.3-6.0.1.el8.x86_64                                                                                                                           1/1 
+      Verifying        : sysstat-11.7.3-6.0.1.el8.x86_64                                                                                                                           1/1 
+
+    Removed:
+      sysstat-11.7.3-6.0.1.el8.x86_64                                                                                                                                                  
+
+    Complete!
+```
+6) 
