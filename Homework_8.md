@@ -166,8 +166,7 @@ Also imagine your system started experiencing RAM leak in one of the application
 1.6 Configure the newly created swap space to be enabled at boot
 ```
     swapon /dev/sdb2
-```
-```
+
     lsblk -f
     NAME        FSTYPE      LABEL UUID                                   MOUNTPOINT
     sda                                                                  
@@ -200,6 +199,153 @@ Also imagine your system started experiencing RAM leak in one of the application
     tmpfs               tmpfs     1.9G  8.7M  1.9G   1% /run
     tmpfs               tmpfs     1.9G     0  1.9G   0% /sys/fs/cgroup
     /dev/mapper/ol-root xfs        38G   11G   27G  29% /
+    /dev/sdb1           xfs       1.9G   46M  1.9G   3% /backup
+    /dev/sda2           xfs      1014M  300M  715M  30% /boot
+    /dev/sda1           vfat      599M  5.1M  594M   1% /boot/efi
+    tmpfs               tmpfs     374M     0  374M   0% /run/user/1000
+
+
+## LVM
+
+LVM. Imagine you're running out of space on your root device. As we found out during the lesson default CentOS installation should already have LVM, means you can easily extend size of your root device. So what are you waiting for? Just do it!
+2.1 Create 2GB partition on /dev/sdc of type "Linux LVM"
+```
+    sudo fdisk /dev/sdb
+    Welcome to fdisk (util-linux 2.32.1).
+    Changes will remain in memory only, until you decide to write them.
+    Be careful before using the write command.
+    Command (m for help): n
+    Partition number (3-128, default 3): 3
+    First sector (4000768-10485726, default 4001792): 
+    Last sector, +sectors or +size{K,M,G,T,P} (4001792-10485726, default 10485726): +2G
+
+    Created a new partition 3 of type 'Linux filesystem' and of size 2 GiB.
+
+    Command (m for help): t
+    Partition number (1-3, default 3): 3 
+    Partition type (type L to list all types): 31
+
+    Changed type of partition 'Linux filesystem' to 'Linux LVM'.
+
+    Command (m for help): w
+    The partition table has been altered.
+    Syncing disks.
+2.2 Initialize the partition as a physical volume (PV)
+```
+    sudo pvcreate /dev/sdb3
+    Physical volume "/dev/sdb3" successfully created.
+```
+  sudo pvdisplay 
+  --- Physical volume ---
+  PV Name               /dev/sda3
+  VG Name               ol
+  PV Size               38.41 GiB / not usable 1.98 MiB
+  Allocatable           yes (but full)
+  PE Size               4.00 MiB
+  Total PE              9833
+  Free PE               0
+  Allocated PE          9833
+  PV UUID               jRaex5-jeFe-uKSQ-V9N5-hi1E-oNze-0sg1E3
+   
+  "/dev/sdb3" is a new physical volume of "2.00 GiB"
+  --- NEW Physical volume ---
+  PV Name               /dev/sdb3
+  VG Name               
+  PV Size               2.00 GiB
+  Allocatable           NO
+  PE Size               0   
+  Total PE              0
+  Free PE               0
+  Allocated PE          0
+  PV UUID               JTBBdP-M8C6-sNjQ-mYPS-OfkN-XAGS-gF1erc
+```
+2.3. Extend the volume group (VG) of your root device using your newly created PV
+```
+  sudo vgextend ol /dev/sdb3
+    Volume group "ol" successfully extended
+    sudo vgdisplay 
+          --- Volume group ---
+          VG Name               ol
+          System ID             
+          Format                lvm2
+          Metadata Areas        2
+          Metadata Sequence No  6
+          VG Access             read/write
+          VG Status             resizable
+          MAX LV                0
+          Cur LV                2
+          Open LV               2
+          Max PV                0
+          Cur PV                2
+          Act PV                2
+          VG Size               <40.41 GiB
+          PE Size               4.00 MiB
+          Total PE              10344
+          Alloc PE / Size       9833 / 38.41 GiB
+          Free  PE / Size       511 / <2.00 GiB
+          VG UUID               Vj3R8p-wTne-LDsl-HqN4-gdT7-EMmY-JYituu
+```    
+2.4. Extend your root logical volume (LV) by 1GB, leaving other 1GB unassigned
+```
+  sudo lvextend -L+1G /dev/ol/root
+  Size of logical volume ol/root changed from 37.41 GiB (9577 extents) to 38.41 GiB (9833 extents).
+  Logical volume ol/root successfully resized.
+  sudo lvdisplay 
+  --- Logical volume ---
+  LV Path                /dev/ol/root
+  LV Name                root
+  VG Name                ol
+  LV UUID                Ll5gh4-qZ3a-8UB6-q2Fy-JRzq-ocf6-NgMn6N
+  LV Write Access        read/write
+  LV Creation host, time localhost.localdomain, 2021-01-19 10:25:44 +0000
+  LV Status              available
+  # open                 1
+  LV Size                38.41 GiB
+  Current LE             9833
+  Segments               3
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     8192
+  Block device           253:0
+``` 
+2.5. Check current disk space usage of your root device
+```
+    df -hT
+    Filesystem          Type      Size  Used Avail Use% Mounted on
+    devtmpfs            devtmpfs  1.9G     0  1.9G   0% /dev
+    tmpfs               tmpfs     1.9G     0  1.9G   0% /dev/shm
+    tmpfs               tmpfs     1.9G  8.7M  1.9G   1% /run
+    tmpfs               tmpfs     1.9G     0  1.9G   0% /sys/fs/cgroup
+    /dev/mapper/ol-root xfs        38G   11G   27G  29% /
+    /dev/sdb1           xfs       1.9G   46M  1.9G   3% /backup
+    /dev/sda2           xfs      1014M  300M  715M  30% /boot
+    /dev/sda1           vfat      599M  5.1M  594M   1% /boot/efi
+    tmpfs               tmpfs     374M     0  374M   0% /run/user/1000
+```
+2.6. Extend your root device filesystem to be able to use additional free space of root LV
+```
+    sudo xfs_growfs /
+    meta-data=/dev/mapper/ol-root    isize=512    agcount=21, agsize=485632 blks
+             =                       sectsz=512   attr=2, projid32bit=1
+             =                       crc=1        finobt=1, sparse=1, rmapbt=0
+             =                       reflink=1
+    data     =                       bsize=4096   blocks=9806848, imaxpct=25
+             =                       sunit=0      swidth=0 blks
+    naming   =version 2              bsize=4096   ascii-ci=0, ftype=1
+    log      =internal log           bsize=4096   blocks=2560, version=2
+             =                       sectsz=512   sunit=0 blks, lazy-count=1
+    realtime =none                   extsz=4096   blocks=0, rtextents=0
+    data blocks changed from 9806848 to 10068992
+ ```
+ 2.7. Verify that after reboot your root device is still 1GB bigger than at 2.5.
+ ```
+     df -hT
+    Filesystem          Type      Size  Used Avail Use% Mounted on
+    devtmpfs            devtmpfs  1.9G     0  1.9G   0% /dev
+    tmpfs               tmpfs     1.9G     0  1.9G   0% /dev/shm
+    tmpfs               tmpfs     1.9G  8.7M  1.9G   1% /run
+    tmpfs               tmpfs     1.9G     0  1.9G   0% /sys/fs/cgroup
+    /dev/mapper/ol-root xfs        39G   11G   28G  29% /
     /dev/sdb1           xfs       1.9G   46M  1.9G   3% /backup
     /dev/sda2           xfs      1014M  300M  715M  30% /boot
     /dev/sda1           vfat      599M  5.1M  594M   1% /boot/efi
