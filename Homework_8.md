@@ -140,6 +140,7 @@ Also imagine your system started experiencing RAM leak in one of the application
     sr0                                                                  
 ```
 1.4) Initialize 512MB partition as swap space
+
 ```
     sudo mkswap -f /dev/sdb2
     Setting up swapspace version 1, size = 508 KiB (520192 bytes)
