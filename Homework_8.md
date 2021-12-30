@@ -181,3 +181,27 @@ Also imagine your system started experiencing RAM leak in one of the application
     └─sdb2      swap              f742f795-c123-4a5a-93ac-374631883419   [SWAP]
     sr0                                                                  
 ```
+1.7 Reboot your host and verify that /dev/sdc1 is mounted at /backup and that your swap partition  (/dev/sdc2) is enabled
+``` sudo vim /etc/fstab ```
+```
+        /dev/mapper/ol-root     /                       xfs     defaults        0 0
+        UUID=2f3fc09a-f87a-40bb-ad8f-7804e444f8a8 /boot                   xfs     defaults        0 0
+        UUID=3A44-1B61          /boot/efi               vfat    umask=0077,shortname=winnt 0 2
+        /dev/mapper/ol-swap     none                    swap    defaults        0 0
+        /dev/sdb1       /backup         xfs     defaults        0 0
+        /dev/sdb2       none    swap    defaults        0 0
+```
+``` sudo init 6```
+```
+    df -hT
+    Filesystem          Type      Size  Used Avail Use% Mounted on
+    devtmpfs            devtmpfs  1.9G     0  1.9G   0% /dev
+    tmpfs               tmpfs     1.9G     0  1.9G   0% /dev/shm
+    tmpfs               tmpfs     1.9G  8.7M  1.9G   1% /run
+    tmpfs               tmpfs     1.9G     0  1.9G   0% /sys/fs/cgroup
+    /dev/mapper/ol-root xfs        38G   11G   27G  29% /
+    /dev/sdb1           xfs       1.9G   46M  1.9G   3% /backup
+    /dev/sda2           xfs      1014M  300M  715M  30% /boot
+    /dev/sda1           vfat      599M  5.1M  594M   1% /boot/efi
+    tmpfs               tmpfs     374M     0  374M   0% /run/user/1000
+```
