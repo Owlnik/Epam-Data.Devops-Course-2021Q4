@@ -146,6 +146,24 @@ Also imagine your system started experiencing RAM leak in one of the application
     Setting up swapspace version 1, size = 508 KiB (520192 bytes)
     no label, UUID=f742f795-c123-4a5a-93ac-374631883419
 ```
+
+1.5 Configure the newly created XFS file system to persistently mount at /backup
+``` sudo mkdir /backup```
+```sudo mount /dev/sdb1 /backup```
+```
+      df -hT
+    Filesystem          Type      Size  Used Avail Use% Mounted on
+    devtmpfs            devtmpfs  1.9G     0  1.9G   0% /dev
+    tmpfs               tmpfs     1.9G  4.0K  1.9G   1% /dev/shm
+    tmpfs               tmpfs     1.9G   25M  1.8G   2% /run
+    tmpfs               tmpfs     1.9G     0  1.9G   0% /sys/fs/cgroup
+    /dev/mapper/ol-root xfs        38G   11G   27G  29% /
+    /dev/sda2           xfs      1014M  300M  715M  30% /boot
+    /dev/sda1           vfat      599M  5.1M  594M   1% /boot/efi
+    tmpfs               tmpfs     374M     0  374M   0% /run/user/1000
+    /dev/sdb1           xfs       1.9G   46M  1.9G   3% /backup
+```
+1.6 Configure the newly created swap space to be enabled at boot
 ```
     swapon /dev/sdb2
 ```
@@ -162,20 +180,4 @@ Also imagine your system started experiencing RAM leak in one of the application
     ├─sdb1      xfs               a2473442-2c59-40b4-9934-7793335c8deb   
     └─sdb2      swap              f742f795-c123-4a5a-93ac-374631883419   [SWAP]
     sr0                                                                  
-```
-1.5 Configure the newly created XFS file system to persistently mount at /backup
-``` sudo mkdir /backup```
-```sudo mount /dev/sdb1 /backup```
-```
-      df -hT
-    Filesystem          Type      Size  Used Avail Use% Mounted on
-    devtmpfs            devtmpfs  1.9G     0  1.9G   0% /dev
-    tmpfs               tmpfs     1.9G  4.0K  1.9G   1% /dev/shm
-    tmpfs               tmpfs     1.9G   25M  1.8G   2% /run
-    tmpfs               tmpfs     1.9G     0  1.9G   0% /sys/fs/cgroup
-    /dev/mapper/ol-root xfs        38G   11G   27G  29% /
-    /dev/sda2           xfs      1014M  300M  715M  30% /boot
-    /dev/sda1           vfat      599M  5.1M  594M   1% /boot/efi
-    tmpfs               tmpfs     374M     0  374M   0% /run/user/1000
-    /dev/sdb1           xfs       1.9G   46M  1.9G   3% /backup
 ```
