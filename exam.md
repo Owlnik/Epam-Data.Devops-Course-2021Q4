@@ -133,3 +133,151 @@ MD5 = 43 94 AF 12 A8 14 24 DC 22 5F E4 F2 DD 02 F2 74
   sr0                     11:0    1 1024M  0 rom
 ```
 9) Инициализировать разделы из п.8 в качестве физических томов для LVM.
+
+``` sudo pvcreate /dev/sdb1
+    Physical volume "/dev/sdb1" successfully created.
+    sudo pvcreate /dev/sdc1
+    Physical volume "/dev/sdc1" successfully created.
+    sudo pvscan
+    PV /dev/sda2   VG centos_centos   lvm2 [<19.50 GiB / 0    free]
+    PV /dev/sdc1                      lvm2 [<10.00 GiB]
+    PV /dev/sdb1                      lvm2 [<10.00 GiB]
+    Total: 3 [39.49 GiB] / in use: 1 [<19.50 GiB] / in no VG: 2 [<20.00 GiB]
+```
+10) Создать две группы LVM и добавить в каждую из них по одному физическому тому из п.9
+``` 
+  sudo vgcreate vg1 /dev/sdb1
+  Volume group "vg1" successfully created
+  sudo vgcreate vg2 /dev/sdc1
+  Volume group "vg2" successfully created
+  sudo vgscan
+  Reading volume groups from cache.
+  Found volume group "centos_centos" using metadata type lvm2
+  Found volume group "vg1" using metadata type lvm2
+  Found volume group "vg2" using metadata type lvm2
+```
+11) В каждой из групп из п.10 создать логический том LVM размером 100% группы.
+
+```
+    sudo lvcreate -l +100%FREE -n lv2 vg2
+    Logical volume "lv2" created.
+    sudo lvcreate -l +100%FREE -n lv1 vg1
+    Logical volume "lv1" created.
+    sudo lvscan
+    ACTIVE            '/dev/centos_centos/root' [<18.70 GiB] inherit
+    ACTIVE            '/dev/centos_centos/swap' [820.00 MiB] inherit
+    ACTIVE            '/dev/vg1/lv1' [<10.00 GiB] inherit
+    ACTIVE            '/dev/vg2/lv2' [<10.00 GiB] inherit
+```
+12) На каждом логическом томе LVM создать файловую систему ext4.
+
+```
+  sudo mkfs.ext4 /dev/vg1/lv1
+  mke2fs 1.42.9 (28-Dec-2013)
+  Filesystem label=
+  OS type: Linux
+  Block size=4096 (log=2)
+  Fragment size=4096 (log=2)
+  Stride=0 blocks, Stripe width=0 blocks
+  655360 inodes, 2620416 blocks
+  131020 blocks (5.00%) reserved for the super user
+  First data block=0
+  Maximum filesystem blocks=2151677952
+  80 block groups
+  32768 blocks per group, 32768 fragments per group
+  8192 inodes per group
+  Superblock backups stored on blocks:
+          32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632
+
+  Allocating group tables: done
+  Writing inode tables: done
+  Creating journal (32768 blocks): done
+  Writing superblocks and filesystem accounting information: done 
+
+  sudo mkfs.ext4 /dev/vg2/lv2
+  mke2fs 1.42.9 (28-Dec-2013)
+  Filesystem label=
+  OS type: Linux
+  Block size=4096 (log=2)
+  Fragment size=4096 (log=2)
+  Stride=0 blocks, Stripe width=0 blocks
+  655360 inodes, 2620416 blocks
+  131020 blocks (5.00%) reserved for the super user
+  First data block=0
+  Maximum filesystem blocks=2151677952
+  80 block groups
+  32768 blocks per group, 32768 fragments per group
+  8192 inodes per group
+  Superblock backups stored on blocks:
+          32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632
+
+  Allocating group tables: done
+  Writing inode tables: done
+  Creating journal (32768 blocks): done
+  Writing superblocks and filesystem accounting information: done 
+
+    lsblk -f
+    NAME                   FSTYPE      LABEL UUID                                   MOUNTPOINT
+    sda
+    ├─sda1                 xfs               dd3da66e-5ba8-4b24-b23d-2caceabd0508   /boot
+    └─sda2                 LVM2_member       2o4p2P-rNMJ-dPuv-soss-xi3i-3yfz-674qaY
+      ├─centos_centos-root xfs               00c2b98e-1247-45fe-8931-d06f57d788b4   /
+      └─centos_centos-swap swap              7a28f385-24f1-4563-90ee-88c5e7de47bf   [SWAP]
+    sdb
+    └─sdb1                 LVM2_member       avVU74-dWPe-wiho-1nm7-YWrj-ckVx-ps0ifT
+      └─vg1-lv1            ext4              9b134ae8-a09e-4656-9232-862b548dd254
+    sdc
+    └─sdc1                 LVM2_member       d62Laj-Yxqa-sBYX-fJuH-5c8y-NFlp-T2DY3L
+      └─vg2-lv2            ext4              de9e4827-9df8-4ed7-a00e-aa2c686f818d
+    sr0
+```
+13) Создать директории и использовать их в качестве точек монтирования файловых систем из п.12:
+
+```
+  sudo mkdir /opt/mount1
+  sudo mkdir /opt/mount2
+  ls -al /opt
+  total 0
+  drwxr-xr-x.  5 root root  54 Jan 20 08:56 .
+  dr-xr-xr-x. 17 root root 284 Jan 13 10:50 ..
+  drwxr-xr-x.  3 root root  26 Jan 18 10:15 hadoop-3.1.2
+  drwxr-xr-x.  2 root root   6 Jan 20 08:55 mount1
+  drwxr-xr-x.  2 root root   6 Jan 20 08:56 mount2
+```
+14) Настроить систему так, чтобы монтирование происходило автоматически при запуске системы. Произвести монтирование новых файловых систем.
+
+```
+  sudo mount /dev/vg1/lv1 /opt/mount1/
+  sudo mount /dev/vg2/lv2 /opt/mount2/
+  df -hT
+  Filesystem                     Type      Size  Used Avail Use% Mounted on
+  devtmpfs                       devtmpfs  1.9G     0  1.9G   0% /dev
+  tmpfs                          tmpfs     1.9G     0  1.9G   0% /dev/shm
+  tmpfs                          tmpfs     1.9G   35M  1.9G   2% /run
+  tmpfs                          tmpfs     1.9G     0  1.9G   0% /sys/fs/cgroup
+  /dev/mapper/centos_centos-root xfs        19G  3.2G   16G  17% /
+  /dev/sda1                      xfs       509M  218M  291M  43% /boot
+  tmpfs                          tmpfs     379M     0  379M   0% /run/user/1000
+  /dev/mapper/vg1-lv1            ext4      9.8G   37M  9.2G   1% /opt/mount1
+  /dev/mapper/vg2-lv2            ext4      9.8G   37M  9.2G   1% /opt/mount2 
+
+  sudo vim /etc/fstab
+    #
+    # /etc/fstab
+    # Created by anaconda on Sat May 30 17:20:38 2020
+    #
+    # Accessible filesystems, by reference, are maintained under '/dev/disk'
+    # See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info
+    #
+    /dev/mapper/centos_centos-root /                       xfs     defaults        0 0
+    UUID=dd3da66e-5ba8-4b24-b23d-2caceabd0508 /boot                   xfs     defaults        0 0
+    /dev/mapper/centos_centos-swap swap                    swap    defaults        0 0
+    /dev/vg1/lv1 /opt/mount1        ext4    defaults        0 0
+    /dev/vg2/lv2 /opt/mount2        ext4    defaults        0 0
+```
+15) После монтирования создать 2 директории для хранения файлов Namenode сервиса HDFS:
+
+``` sudo mkdir /opt/mount{1..2}/namenode-dir ```
+
+16. Сделать пользователя hdfs и группу hadoop владельцами этих 
+директорий.
