@@ -402,3 +402,15 @@ workernode/home/hadoop/.ssh/config: line 7: Bad configuration option: ~
 решение проблемы было найдено после вывода конфига на консоль и коследующего удаления тильды в последней строке.
 
 ```
+22) Добавить VM1 и VM2 в /etc/hosts.
+```
+  sudo vim /etc/hosts
+      127.0.0.1   localhost localhost.localdomain localhost4 localhost4.locald127.0.0.1   localhost localhost.localdomain localhost4 localhost4.locald127.0.0.1   localhost localhost.localdomain localhost4 localhost4.locald127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+    ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+    ::1 CentOS7
+
+    78.140.242.57   headnode
+
+    78.140.242.55   CentOS7
+```
