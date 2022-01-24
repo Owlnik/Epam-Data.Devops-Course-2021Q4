@@ -279,5 +279,107 @@ MD5 = 43 94 AF 12 A8 14 24 DC 22 5F E4 F2 DD 02 F2 74
 
 ``` sudo mkdir /opt/mount{1..2}/namenode-dir ```
 
-16. Сделать пользователя hdfs и группу hadoop владельцами этих 
-директорий.
+16. Сделать пользователя hdfs и группу hadoop владельцами этих директорий.
+
+``` sudo chown hdfs:hadoop /opt/mount{1..2}/namenode-dir```
+```
+  ls -al /opt/mount{1..2}
+  /opt/mount1:
+  total 24
+  drwxr-xr-x. 4 root root    4096 Jan 20 09:30 .
+  drwxr-xr-x. 5 root root      54 Jan 20 08:56 ..
+  drwx------. 2 root root   16384 Jan 20 08:50 lost+found
+  drwxr-xr-x. 2 hdfs hadoop  4096 Jan 20 09:30 namenode-dir
+
+  /opt/mount2:
+  total 24
+  drwxr-xr-x. 4 root root    4096 Jan 20 09:30 .
+  drwxr-xr-x. 5 root root      54 Jan 20 08:56 ..
+  drwx------. 2 root root   16384 Jan 20 08:51 lost+found
+  drwxr-xr-x. 2 hdfs hadoop  4096 Jan 20 09:30 namenode-dir
+```
+17) После монтирования создать 2 директории для хранения файлов Datanode сервиса HDFS:
+```
+  sudo mkdir /opt/mount{1..2}/datanode-dir
+  ls -al /opt/mount{1..2}
+  /opt/mount1:
+  total 24
+  drwxr-xr-x. 4 root root  4096 Jan 24 06:02 .
+  drwxr-xr-x. 5 root root    54 Jan 22 14:06 ..
+  drwxr-xr-x. 2 root root  4096 Jan 24 06:02 datanode-dir
+  drwx------. 2 root root 16384 Jan 22 14:05 lost+found
+
+  /opt/mount2:
+  total 24
+  drwxr-xr-x. 4 root root  4096 Jan 24 06:02 .
+  drwxr-xr-x. 5 root root    54 Jan 22 14:06 ..
+  drwxr-xr-x. 2 root root  4096 Jan 24 06:02 datanode-dir
+  drwx------. 2 root root 16384 Jan 22 14:05 lost+found  
+```
+18) Сделать пользователя hdfs и группу hadoop владельцами директорий из п.17.
+
+```
+  sudo chown hdfs:hadoop /opt/mount{1..2}/datanode-dir
+  ls -al /opt/mount{1..2}
+  /opt/mount1:
+  total 24
+  drwxr-xr-x. 4 root root    4096 Jan 24 06:02 .
+  drwxr-xr-x. 5 root root      54 Jan 22 14:06 ..
+  drwxr-xr-x. 2 hdfs hadoop  4096 Jan 24 06:02 datanode-dir
+  drwx------. 2 root root   16384 Jan 22 14:05 lost+found
+
+  /opt/mount2:
+  total 24
+  drwxr-xr-x. 4 root root    4096 Jan 24 06:02 .
+  drwxr-xr-x. 5 root root      54 Jan 22 14:06 ..
+  drwxr-xr-x. 2 hdfs hadoop  4096 Jan 24 06:02 datanode-dir
+  drwx------. 2 root root   16384 Jan 22 14:05 lost+found  
+```
+19) Создать дополнительные 4 директории для Nodemanager сервиса YARN
+
+```
+  sudo mkdir /opt/mount{1..2}/nodemanager-local-dir
+  sudo mkdir /opt/mount{1..2}/nodemanager-log-dir
+  ls -al /opt/mount{1..2}
+  /opt/mount1:
+  total 32
+  drwxr-xr-x. 6 root root    4096 Jan 24 06:24 .
+  drwxr-xr-x. 5 root root      54 Jan 22 14:06 ..
+  drwxr-xr-x. 2 hdfs hadoop  4096 Jan 24 06:02 datanode-dir
+  drwx------. 2 root root   16384 Jan 22 14:05 lost+found
+  drwxr-xr-x. 2 root root    4096 Jan 24 06:24 nodemanager-local-dir
+  drwxr-xr-x. 2 root root    4096 Jan 24 06:24 nodemanager-log-dir
+
+  /opt/mount2:
+  total 32
+  drwxr-xr-x. 6 root root    4096 Jan 24 06:24 .
+  drwxr-xr-x. 5 root root      54 Jan 22 14:06 ..
+  drwxr-xr-x. 2 hdfs hadoop  4096 Jan 24 06:02 datanode-dir
+  drwx------. 2 root root   16384 Jan 22 14:05 lost+found
+  drwxr-xr-x. 2 root root    4096 Jan 24 06:24 nodemanager-local-dir
+  drwxr-xr-x. 2 root root    4096 Jan 24 06:24 nodemanager-log-dir
+```
+19)Сделать пользователя yarn и группу hadoop владельцами директорий из п.19.
+
+```
+  sudo chown yarn:hadoop /opt/mount{1..2}/nodemanager-local-dir
+  [exam@CentOS7 ~]$ sudo chown yarn:hadoop /opt/mount{1..2}/nodemanager-log-dir
+  [exam@CentOS7 ~]$ ls -al /opt/mount{1..2}
+  /opt/mount1:
+  total 32
+  drwxr-xr-x. 6 root root    4096 Jan 24 06:24 .
+  drwxr-xr-x. 5 root root      54 Jan 22 14:06 ..
+  drwxr-xr-x. 2 hdfs hadoop  4096 Jan 24 06:02 datanode-dir
+  drwx------. 2 root root   16384 Jan 22 14:05 lost+found
+  drwxr-xr-x. 2 yarn hadoop  4096 Jan 24 06:24 nodemanager-local-dir
+  drwxr-xr-x. 2 yarn hadoop  4096 Jan 24 06:24 nodemanager-log-dir
+
+  /opt/mount2:
+  total 32
+  drwxr-xr-x. 6 root root    4096 Jan 24 06:24 .
+  drwxr-xr-x. 5 root root      54 Jan 22 14:06 ..
+  drwxr-xr-x. 2 hdfs hadoop  4096 Jan 24 06:02 datanode-dir
+  drwx------. 2 root root   16384 Jan 22 14:05 lost+found
+  drwxr-xr-x. 2 yarn hadoop  4096 Jan 24 06:24 nodemanager-local-dir
+  drwxr-xr-x. 2 yarn hadoop  4096 Jan 24 06:24 nodemanager-log-dir 
+```
