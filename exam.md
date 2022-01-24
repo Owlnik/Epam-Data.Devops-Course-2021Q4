@@ -359,7 +359,7 @@ MD5 = 43 94 AF 12 A8 14 24 DC 22 5F E4 F2 DD 02 F2 74
   drwxr-xr-x. 2 root root    4096 Jan 24 06:24 nodemanager-local-dir
   drwxr-xr-x. 2 root root    4096 Jan 24 06:24 nodemanager-log-dir
 ```
-19)Сделать пользователя yarn и группу hadoop владельцами директорий из п.19.
+20) Сделать пользователя yarn и группу hadoop владельцами директорий из п.19.
 
 ```
   sudo chown yarn:hadoop /opt/mount{1..2}/nodemanager-local-dir
@@ -382,4 +382,23 @@ MD5 = 43 94 AF 12 A8 14 24 DC 22 5F E4 F2 DD 02 F2 74
   drwx------. 2 root root   16384 Jan 22 14:05 lost+found
   drwxr-xr-x. 2 yarn hadoop  4096 Jan 24 06:24 nodemanager-local-dir
   drwxr-xr-x. 2 yarn hadoop  4096 Jan 24 06:24 nodemanager-log-dir 
+```
+21) Настроить доступ по SSH, используя ключи для пользователя hadoop.
+```
+  sudo ssh-keygen -t ed25519 -f /home/hadoop/.ssh/key2
+  sudo chmod 600 /home/hadoop/.ssh/key2
+  sudo chmod 600 /home/hadoop/.ssh/key2.pub
+  sudo chown -R hadoop:hadoop /home/hadoop/.ssh
+  sudo vim /home/hadoop/.ssh/config
+   Host workernode
+    HostName 78.140.242.55
+    PreferredAuthentications publickey
+    IdentityFile /home/hadoop/.ssh/key1
+    User hadoop
+  sudo ssh-copy-id -i /home/hadoop/.ssh/key2.pub hadoop@78.140.242.57
+```
+При тестовом подключении возникла ошибка 
+workernode/home/hadoop/.ssh/config: line 7: Bad configuration option: ~
+решение проблемы было найдено после вывода конфига на консоль и коследующего удаления тильды в последней строке.
+
 ```
