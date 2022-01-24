@@ -414,3 +414,20 @@ workernode/home/hadoop/.ssh/config: line 7: Bad configuration option: ~
 
     78.140.242.55   CentOS7
 ```
+23) Скачать файлы по ссылкам в /usr/local/hadoop/current/etc/hadoop/{hadoop-env.sh,core-site.xml,hdfs-site.xml,yarn-site.xml}. При помощи sed заменить заглушки на необходимые значения
+
+```
+  sudo mkdir -p /usr/local/hadoop/current/etc/hadoop/
+  cd /usr/local/hadoop/current/etc/hadoop/
+  sudo yum install git
+  sudo git clone https://gist.github.com/64b9abd1700e15f04147ea48bc72b3c7.git
+  sudo git clone https://gist.github.com/2bedf24fd2721bad276e416b57d63e38.git
+  sudo git clone https://gist.github.com/ba87c0072cd51aa85c9ee6334cc99158.git
+  sudo git clone https://gist.github.com/2f42f248f02aeda18105805493bb0e9b.git
+  sudo mv 2bedf24fd2721bad276e416b57d63e38/hdfs-site.xml ./hdfs-site.xml
+  sudo mv 64b9abd1700e15f04147ea48bc72b3c7/core-site.xml ./core-site.xml
+  sudo mv ba87c0072cd51aa85c9ee6334cc99158/yarn-site.xml ./yarn-site.xml
+  sudo mv 2f42f248f02aeda18105805493bb0e9b/hadoop-env.sh ./hadoop-env.sh
+  sudo scp -r ./etc root@78.140.242.55:/usr/local/hadoop/current
+```
+24)
