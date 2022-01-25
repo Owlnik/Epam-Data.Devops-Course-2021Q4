@@ -28,6 +28,7 @@ VM2: 2CPU, 2-4G памяти, системный диск на 15-20G и доп�
   openjdk version "1.8.0_312"
   OpenJDK Runtime Environment (build 1.8.0_312-b07)
   OpenJDK 64-Bit Server VM (build 25.312-b07, mixed mode)
+
 ```
 4)Скачать архив с Hadoop версии 3.1.2
 
@@ -428,11 +429,11 @@ workernode/home/hadoop/.ssh/config: line 7: Bad configuration option: ~
   sudo mv 64b9abd1700e15f04147ea48bc72b3c7/core-site.xml ./core-site.xml
   sudo mv ba87c0072cd51aa85c9ee6334cc99158/yarn-site.xml ./yarn-site.xml
   sudo mv 2f42f248f02aeda18105805493bb0e9b/hadoop-env.sh ./hadoop-env.sh
-  sudo sed -i 's/\"\%PATH_TO_OPENJDK8_INSTALLATION\%\"/\/usr\/share\/java-1.8.0/' ./hadoop-env.sh
+  sudo sed -i 's/\"\%PATH_TO_OPENJDK8_INSTALLATION\%\"/\/usr\/lib\/jvm\/java-1.8.0-openjdk-1.8.0.312.b07-1.el7_9.x86_64\/jre\/bin\/java/' ./hadoop-env.sh
   sudo grep JAVA_HOME ./hadoop-env.sh
     \#  JAVA_HOME=/usr/java/testing hdfs dfs -ls
     \# Technically, the only required environment variable is JAVA_HOME.
-     export JAVA_HOME=/usr/share/java-1.8.0
+     export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.312.b07-1.el7_9.x86_64/jre/bin/java
   sudo sed -i 's/\"\%PATH_TO_HADOOP_INSTALLATION\"/\/usr\/local\/hadoop\/current/' ./hadoop-env.sh
   grep HADOOP_HOME hadoop-env.sh
     export HADOOP_HOME=/usr/local/hadoop/current
@@ -474,4 +475,10 @@ workernode/home/hadoop/.ssh/config: line 7: Bad configuration option: ~
   echo $HADOOP_HOME
     /usr/local/hadoop/current
 ```
-25)
+25) Произвести форматирование HDFS (от имени пользователя hdfs):
+
+```
+sudo su hdfs
+. /etc/profile
+$HADOOP_HOME/bin/hdfs namenode -format cluster1
+```
