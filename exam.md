@@ -565,3 +565,18 @@ workernode/home/hadoop/.ssh/config: line 7: Bad configuration option: ~
     SHUTDOWN_MSG: Shutting down NameNode at localhost/127.0.0.1
     ************************************************************/
 ```
+26) Запустить демоны сервисов Hadoop 
+
+```
+  $HADOOP_HOME/bin/hdfs --daemon start namenode
+  sudo chmod 775 ./logs
+  sudo -u yarn $HADOOP_HOME/bin/yarn --daemon start resourcemanager
+```
+27) Запустить демоны сервисов
+
+```
+  sudo -u hdfs $HADOOP_HOME/bin/hdfs --daemon start datanode
+
+  sudo -u yarn $HADOOP_HOME/bin/yarn --daemon start nodemanager
+```
+28) Проверить доступность Web-интефейсов HDFS Namenode и YARN Resource Manager по портам 9870 и 8088 соответственно (VM1). << порты должны быть доступны с хостовой системы.
