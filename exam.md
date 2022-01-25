@@ -401,7 +401,7 @@ MD5 = 43 94 AF 12 A8 14 24 DC 22 5F E4 F2 DD 02 F2 74
 workernode/home/hadoop/.ssh/config: line 7: Bad configuration option: ~
 решение проблемы было найдено после вывода конфига на консоль и коследующего удаления тильды в последней строке.
 
-```
+
 22) Добавить VM1 и VM2 в /etc/hosts.
 ```
   sudo vim /etc/hosts
