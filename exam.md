@@ -580,3 +580,31 @@ workernode/home/hadoop/.ssh/config: line 7: Bad configuration option: ~
   sudo -u yarn $HADOOP_HOME/bin/yarn --daemon start nodemanager
 ```
 28) Проверить доступность Web-интефейсов HDFS Namenode и YARN Resource Manager по портам 9870 и 8088 соответственно (VM1). << порты должны быть доступны с хостовой системы.
+```
+  ssh -L 9870:localhost:9870 root@78.140.242.57 -N
+```
+29) Настроить управление запуском каждого компонента Hadoop при помощи systemd (используя юниты-сервисы).
+
+```
+  sudo vim /etc/systemd/system/hdfs_demon.service
+    [Unit]
+    Description=hdfs_start_unit
+    After=syslog.target
+    After=network-online.target
+
+    [Service]
+    Type=forking
+
+    User=hdfs
+    Group=hadoop
+
+    Environment=HADOOP_HOME=/usr/local/hadoop/current
+    Environment=JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.312.b07-1.el7_9.x86_64/jre
+
+    ExecStart=$HADOOP_HOME/bin/hdfs --daemon start namenode
+    TimeoutSec=300
+
+    [Install]
+    WantedBy=multi-user.target
+
+```
