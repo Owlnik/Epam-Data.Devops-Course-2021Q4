@@ -601,7 +601,7 @@ workernode/home/hadoop/.ssh/config: line 7: Bad configuration option: ~
     Environment=HADOOP_HOME=/usr/local/hadoop/current
     Environment=JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.312.b07-1.el7_9.x86_64/jre
 
-    ExecStart=$HADOOP_HOME/bin/hdfs --daemon start namenode
+    ExecStart=/opt/hadoop-3.1.2/bin/hdfs --daemon start namenode
     TimeoutSec=300
 
     [Install]
